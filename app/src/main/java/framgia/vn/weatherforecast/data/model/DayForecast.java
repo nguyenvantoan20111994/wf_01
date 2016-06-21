@@ -56,7 +56,7 @@ public class DayForecast {
 
     public String getDayOfTheWeek() {
         SimpleDateFormat formatter = new SimpleDateFormat("EEEE");
-        Date dateTime = new Date(getTime());
+        Date dateTime = new Date(mTime * 1000);
         return formatter.format(dateTime);
     }
 }

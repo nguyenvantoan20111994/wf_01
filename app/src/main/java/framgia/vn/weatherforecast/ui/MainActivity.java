@@ -21,10 +21,10 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
 
-    private ActionBarDrawerToggle mToggle;
-
     @Bind(R.id.linear_layout_settings)
     LinearLayout mLinearLayoutSettings;
+
+    private ActionBarDrawerToggle mToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +36,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void initViews() {
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle(null);
         mToggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.setDrawerListener(mToggle);
         mToggle.syncState();
+
     }
 
     @OnClick(R.id.linear_layout_settings)
@@ -58,4 +60,5 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
 }
