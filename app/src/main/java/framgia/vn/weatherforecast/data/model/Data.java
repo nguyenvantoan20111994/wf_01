@@ -5,10 +5,12 @@ import com.google.gson.annotations.SerializedName;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import io.realm.RealmObject;
+
 /**
  * Created by toannguyen201194 on 24/06/2016.
  */
-public class Data {
+public class Data extends RealmObject{
     @SerializedName("time")
     private long mTime;
     @SerializedName("summary")

@@ -37,6 +37,15 @@
     <string name="not_connect_network">Please! choose a connection network</string>
     <string name="data_request">no data returns please swipe the screen to the latest</string>
     <string name="update">Update:</string>
+    <string name="google_api_key">AIzaSyDGj6VRKYu3tOFlLAt6yIe3u5Q2JsOIJKA</string>
+    <string name="action_enable_current_location">Enable</string>
+    <string name="location_services_disabled">Location services disabled</string>
+    <string name="open_location_settings">Open location settings</string>
+    <string name="permissions">You need to grant permission</string>
+    <string name="retry">Retry</string>
+    <string name="current_location_not_found">Current location not found</string>
+    <string name="require_location_permission">You need to allow location permission</string>
+    <string name="city">city</string>
     <array name="temperature_unit">
         <item name="celsius">Celsius</item>
         <item name="fahrenheilt">Fahrenheit</item>
@@ -47,4 +56,5 @@
         <item name="mph">mph</item>
         <item name="kmh">km/h</item>
     </array>
+    
 </resources>

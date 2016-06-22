@@ -7,33 +7,27 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import framgia.vn.weatherforecast.data.model.WeatherForeCast;
+import framgia.vn.weatherforecast.ui.fragment.WeatherCityFragment;
+
 /**
  * Created by toannguyen201194 on 23/05/2016.
  */
 public class ViewpagerAdapter extends FragmentPagerAdapter {
-    private final List<Fragment> mFrgList = new ArrayList<>();
+    private final List<WeatherForeCast> mDatas;
 
-    public ViewpagerAdapter(FragmentManager fm) {
+    public ViewpagerAdapter(FragmentManager fm, List<WeatherForeCast> datas) {
         super(fm);
+        mDatas = datas;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return mFrgList.get(position);
+        return new WeatherCityFragment(mDatas.get(position));
     }
 
     @Override
     public int getCount() {
-        return mFrgList.size();
-    }
-
-    public void addFragment(Fragment fragment) {
-        mFrgList.add(fragment);
-        notifyDataSetChanged();
-    }
-
-    public void remove(int position) {
-        mFrgList.remove(position);
-        notifyDataSetChanged();
+        return mDatas.size();
     }
 }

@@ -43,7 +43,7 @@ public class DayForecastAdapters
     public void onBindViewHolder(DayOfWeekHolders holder, int position) {
         Data daily = mDailies.get(position);
         holder.text_day.setText(daily.getDayOfTheWeek());
-        holder.image_icon.setImageResource(ResourcesUtils.getResources(mContext,daily.getIcon(),
+        holder.image_icon.setImageResource(ResourcesUtils.getResources(mContext, daily.getIcon(),
             AppConfigs.DRAWABLE));
         holder.text_temperatureminmax
             .setText(daily.getTemperatureMin() + "/" + daily.getTemperatureMax());
