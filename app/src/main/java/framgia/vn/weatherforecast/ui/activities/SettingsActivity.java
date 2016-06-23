@@ -1,4 +1,4 @@
-package framgia.vn.weatherforecast.ui;
+package framgia.vn.weatherforecast.ui.activities;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -24,25 +24,18 @@ import framgia.vn.weatherforecast.R;
 public class SettingsActivity extends AppCompatActivity {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
-
     @Bind(R.id.relative_layout_current_location)
     RelativeLayout mRelativeLayoutCurrentLocation;
-
     @Bind(R.id.switch_current_location)
     Switch mSwitchCurrentLocation;
-
     @Bind(R.id.linear_layout_temperature_unit)
     LinearLayout mLinearLayoutTemperatureUnit;
-
     @Bind(R.id.text_view_temperature_unit)
     TextView mTextViewTemperatureUnit;
-
     @Bind(R.id.linear_layout_wind_speed_unit)
     LinearLayout mLinearLayoutWindSpeedUnit;
-
     @Bind(R.id.text_view_wind_speed_unit)
     TextView mTextViewWindSpeedUnit;
-
     @Bind(R.id.linear_layout_license)
     LinearLayout mLinearLayoutLicense;
 
@@ -73,23 +66,24 @@ public class SettingsActivity extends AppCompatActivity {
 
     @OnClick(R.id.linear_layout_temperature_unit)
     void selectTemperatureUnits() {
-        final String[] arrayTemperatureUnit = getResources().getStringArray(R.array.temperature_unit);
+        final String[] arrayTemperatureUnit =
+            getResources().getStringArray(R.array.temperature_unit);
         final AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
         builder.setTitle(R.string.temperature)
-                .setSingleChoiceItems(arrayTemperatureUnit, 0, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mTextViewTemperatureUnit.setText(arrayTemperatureUnit[which]);
-                        dialog.dismiss();
-                        // TODO: 22/06/2016, save to database
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
+            .setSingleChoiceItems(arrayTemperatureUnit, 0, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mTextViewTemperatureUnit.setText(arrayTemperatureUnit[which]);
+                    dialog.dismiss();
+                    // TODO: 22/06/2016, save to database
+                }
+            })
+            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
         builder.create().show();
     }
 
@@ -98,21 +92,21 @@ public class SettingsActivity extends AppCompatActivity {
         final String[] arrayWindSpeedUnit = getResources().getStringArray(R.array.wind_speed_unit);
         final AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
         builder.setTitle(R.string.wind_speed)
-                .setSingleChoiceItems(arrayWindSpeedUnit, 0, new DialogInterface.OnClickListener() {
+            .setSingleChoiceItems(arrayWindSpeedUnit, 0, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mTextViewWindSpeedUnit.setText(arrayWindSpeedUnit[which]);
+                    dialog.dismiss();
+                    // TODO: 22/06/2016, save to database
+                }
+            })
+            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mTextViewWindSpeedUnit.setText(arrayWindSpeedUnit[which]);
+                    public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
-                        // TODO: 22/06/2016, save to database
                     }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss();
-                            }
-                        }
-                );
+                }
+            );
         builder.create().show();
     }
 

@@ -2,7 +2,6 @@ package framgia.vn.weatherforecast.data.model;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * Created by toannguyen201194 on 20/06/2016.
@@ -13,6 +12,15 @@ public class DayForecast {
     private double mTemperatureMin;
     private double mTemperatureMax;
     private String mIcon;
+
+    public DayForecast(long mTime, double mTemperatureMin, String mSummary, double mTemperatureMax,
+                       String mIcon) {
+        this.mTime = mTime;
+        this.mTemperatureMin = mTemperatureMin;
+        this.mSummary = mSummary;
+        this.mTemperatureMax = mTemperatureMax;
+        this.mIcon = mIcon;
+    }
 
     public long getTime() {
         return mTime;
