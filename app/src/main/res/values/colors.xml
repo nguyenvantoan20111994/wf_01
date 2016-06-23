@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#e7306f9f</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#3f57b5</color>
+    <color name="colorPrimaryDark">#3a306f9f</color>
+    <color name="colorAccent">#0040efff</color>
     <color name="menu_drawer_background">#2196F3</color>
     <color name="text_units">#4CAF50</color>
+    <color name="color_border_text">#deda06</color>
+    <color name="actionbar_opacity">#00000000</color>
 </resources>

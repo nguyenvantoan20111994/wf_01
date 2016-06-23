@@ -93,8 +93,7 @@ public class CurrentForecast {
     public String getFormattedTime() {
         SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
         formatter.setTimeZone(TimeZone.getTimeZone(getTimezone()));
-        Date dateTime = new Date();
+        Date dateTime = new Date(getTime() * 1000);
         return formatter.format(dateTime);
-
     }
 }
