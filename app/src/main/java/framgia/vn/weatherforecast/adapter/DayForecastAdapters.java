@@ -1,6 +1,7 @@
 package framgia.vn.weatherforecast.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,19 +14,19 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import framgia.vn.weatherforecast.R;
-import framgia.vn.weatherforecast.data.model.DayForecast;
+import framgia.vn.weatherforecast.data.model.Data;
 
 /**
  * Created by toannguyen201194 on 22/06/2016.
  */
 public class DayForecastAdapters
     extends RecyclerView.Adapter<DayForecastAdapters.DayOfWeekHolders> {
-    List<DayForecast> mDayForecasts;
+    List<Data> mDailies;
     Context mContext;
     LayoutInflater mLayoutInflater;
 
-    public DayForecastAdapters(List<DayForecast> dayForecasts, Context context) {
-        mDayForecasts = dayForecasts;
+    public DayForecastAdapters(List<Data> dailies, Context context) {
+        mDailies = dailies;
         mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
     }
@@ -38,16 +39,18 @@ public class DayForecastAdapters
 
     @Override
     public void onBindViewHolder(DayOfWeekHolders holder, int position) {
-        DayForecast dayForecast = mDayForecasts.get(position);
-        holder.text_day.setText(dayForecast.getDayOfTheWeek());
-        holder.image_icon.setImageResource(R.drawable.ic_location_on_white_24dp);
+        Data daily = mDailies.get(position);
+        holder.text_day.setText(daily.getDayOfTheWeek());
+        int id=mContext.getResources().getIdentifier(daily.getIcon(),"drawable",mContext
+            .getPackageName());
+        holder.image_icon.setImageResource(id);
         holder.text_temperatureminmax
-            .setText(dayForecast.getTemperatureMin() + "/" + dayForecast.getTemperatureMax());
+            .setText(daily.getTemperatureMin() + "/" + daily.getTemperatureMax());
     }
 
     @Override
     public int getItemCount() {
-        return mDayForecasts == null ? 0 : mDayForecasts.size();
+        return mDailies == null ? 0 : mDailies.size();
     }
 
     public class DayOfWeekHolders extends RecyclerView.ViewHolder {
@@ -64,4 +67,3 @@ public class DayForecastAdapters
         }
     }
 }
-

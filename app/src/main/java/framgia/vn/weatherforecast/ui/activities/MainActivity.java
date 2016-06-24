@@ -29,7 +29,10 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.view_pager)
     ViewPager mViewPager;
     private ActionBarDrawerToggle mToggle;
-    private ViewpagerAdapter mViewpagerAdapter;
+    private static ViewpagerAdapter mViewpagerAdapter;
+    private double lat = 15.735394;
+    private double lon = 96.7372145;
+    private String city = "America/Los_Angeles";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
             R.string.navigation_drawer_close);
         mDrawerLayout.setDrawerListener(mToggle);
         mToggle.syncState();
-        // TODO: 23/06/2016
+        setupViewPager(mViewPager, city, lat, lon);
     }
 
     @OnClick(R.id.linear_layout_settings)
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setupViewPager(ViewPager viewPage, String city, float latitude, float longitude) {
+    public void setupViewPager(ViewPager viewPage, String city, double latitude, double longitude) {
         mViewpagerAdapter = new ViewpagerAdapter(getSupportFragmentManager());
         mViewpagerAdapter.addFragment(WeatherCityFragment.newIntance(city, latitude, longitude));
         viewPage.setAdapter(mViewpagerAdapter);
@@ -80,10 +83,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // TODO: 23/06/2016 add fragment when click button toolbar
-    public void addFragment(String city, float latitude, float longitude) {
+    public static void  addFragment(String city, double latitude, double longitude) {
         mViewpagerAdapter.addFragment(WeatherCityFragment.newIntance(city, latitude, longitude));
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);

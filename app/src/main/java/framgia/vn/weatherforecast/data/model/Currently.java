@@ -1,22 +1,28 @@
 package framgia.vn.weatherforecast.data.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 /**
- * Created by toannguyen201194 on 20/06/2016.
+ * Created by toannguyen201194 on 24/06/2016.
  */
-public class CurrentForecast {
-    private float mLatitude;
-    private float mLongitude;
+public class Currently {
+    @SerializedName("time")
     private long mTime;
+    @SerializedName("summary")
     private String mSummary;
+    @SerializedName("icon")
     private String mIcon;
+    @SerializedName("temperature")
     private double mTemperature;
+    @SerializedName("humidity")
     private float mHumidity;
+    @SerializedName("windSpeed")
     private float mWindSpeed;
-    private String mTimezone;
+    @SerializedName("dewPoint")
+    private float mDewPoint;
 
     public long getTime() {
         return mTime;
@@ -35,7 +41,7 @@ public class CurrentForecast {
     }
 
     public String getIcon() {
-        return mIcon;
+        return mIcon.replace("-","_");
     }
 
     public void setIcon(String icon) {
@@ -58,30 +64,6 @@ public class CurrentForecast {
         this.mWindSpeed = windSpeed;
     }
 
-    public float getLatitude() {
-        return mLatitude;
-    }
-
-    public void setLatitude(float latitude) {
-        this.mLatitude = latitude;
-    }
-
-    public float getLongitude() {
-        return mLongitude;
-    }
-
-    public void setLongitude(float longitude) {
-        this.mLongitude = longitude;
-    }
-
-    public String getTimezone() {
-        return mTimezone;
-    }
-
-    public void setTimezone(String timezone) {
-        this.mTimezone = timezone;
-    }
-
     public double getTemperature() {
         return mTemperature;
     }
@@ -90,9 +72,16 @@ public class CurrentForecast {
         this.mTemperature = temperature;
     }
 
+    public float getDewPoint() {
+        return mDewPoint;
+    }
+
+    public void setdewPoint(float dewPoint) {
+        this.mDewPoint = dewPoint;
+    }
+
     public String getFormattedTime() {
         SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
-        formatter.setTimeZone(TimeZone.getTimeZone(getTimezone()));
         Date dateTime = new Date(getTime() * 1000);
         return formatter.format(dateTime);
     }
