@@ -1,12 +1,13 @@
 <resources>
-    <string name="app_name">WEATHER FORECAST</string>
+    <string name="app_name">Weather forecast</string>
     <string name="title_city">Ha Noi</string>
     <string name="title_activity_main">MainActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_menu">Menu</string>
+    <string name="action_add_city">Add city</string>
     <string name="my_saved_location">My saved locations</string>
     <string name="settings">Settings</string>
     <string name="current_location">Current Location</string>
@@ -22,6 +23,16 @@
     <string name="license">License</string>
     <string name="cancel">CANCEL</string>
     <string name="copyright">2016 Framgia Vietnam. All rights reserved.</string>
+    <string name="search_city">Search city</string>
+    <string name="latitude">latitude</string>
+    <string name="longitude">longitude</string>
+    <string name="erroe_contacting_api">Error contacting API: </string>
+    <string name="error_api_not_connected">Google API not connected</string>
+    <string name="error_something_went_wrong">Something went wrong</string>
+    <string name="prompt_connection_done">Connection Done</string>
+    <string name="prompt_connection_suspended">Connection Suspended</string>
+    <string name="prompt_connection_failed">Connection Failed</string>
+
     <array name="temperature_unit">
         <item name="celsius">Celsius</item>
         <item name="fahrenheilt">Fahrenheit</item>
