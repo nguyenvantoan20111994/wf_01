@@ -36,6 +36,8 @@ import framgia.vn.weatherforecast.adapter.PlacesAutoCompleteAdapter;
  */
 public class AddCityActivity extends AppCompatActivity
     implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    private static final LatLngBounds BOUNDS_INDIA = new LatLngBounds(
+        new LatLng(-0, 0), new LatLng(0, 0));
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.edit_text_search_city)
@@ -47,8 +49,6 @@ public class AddCityActivity extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
     private LinearLayoutManager mLinearLayoutManager;
     private PlacesAutoCompleteAdapter mAutoCompleteAdapter;
-    private static final LatLngBounds BOUNDS_INDIA = new LatLngBounds(
-        new LatLng(-0, 0), new LatLng(0, 0));
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,12 +84,9 @@ public class AddCityActivity extends AppCompatActivity
                             if (places.getCount() == 1) {
                                 Place selectedPlace = places.get(0);
                                 LatLng latLng = selectedPlace.getLatLng();
-                                Double latitude = latLng.latitude;
-                                Double longitude = latLng.longitude;
-                                Toast.makeText(AddCityActivity.this, selectedPlace.getName()
-                                    .toString() + "\n" + R.string.latitude + latitude + R
-                                    .string.longitude + longitude, Toast.LENGTH_SHORT).show();
-                                // TODO: 24/06/2016 call API with city name,lat,long value
+                                MainActivity.addFragment(selectedPlace.getName().toString(),
+                                    latLng.latitude, latLng.longitude);
+                                finish();
                             } else {
                                 Toast.makeText(getApplicationContext(),
                                     R.string.error_something_went_wrong, Toast

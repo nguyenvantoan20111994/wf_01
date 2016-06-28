@@ -1,25 +1,31 @@
 package framgia.vn.weatherforecast.data.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by toannguyen201194 on 20/06/2016.
+ * Created by toannguyen201194 on 24/06/2016.
  */
-public class DayForecast {
+public class Data {
+    @SerializedName("time")
     private long mTime;
+    @SerializedName("summary")
     private String mSummary;
-    private double mTemperatureMin;
-    private double mTemperatureMax;
+    @SerializedName("icon")
     private String mIcon;
+    @SerializedName("temperatureMin")
+    private double mTemperatureMin;
+    @SerializedName("temperatureMax")
+    private double mTemperatureMax;
 
-    public DayForecast(long mTime, double mTemperatureMin, String mSummary, double mTemperatureMax,
-                       String mIcon) {
-        this.mTime = mTime;
-        this.mTemperatureMin = mTemperatureMin;
-        this.mSummary = mSummary;
-        this.mTemperatureMax = mTemperatureMax;
-        this.mIcon = mIcon;
+    public String getIcon() {
+        return mIcon.replace("-","_");
+    }
+
+    public void setIcon(String icon) {
+        this.mIcon = icon;
     }
 
     public long getTime() {
@@ -52,14 +58,6 @@ public class DayForecast {
 
     public void setTemperatureMax(double temperatureMax) {
         this.mTemperatureMax = temperatureMax;
-    }
-
-    public String getIcon() {
-        return mIcon;
-    }
-
-    public void setIcon(String icon) {
-        this.mIcon = icon;
     }
 
     public String getDayOfTheWeek() {
