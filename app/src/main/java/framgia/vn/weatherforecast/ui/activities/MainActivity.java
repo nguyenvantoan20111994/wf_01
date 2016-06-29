@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -20,6 +21,7 @@ import framgia.vn.weatherforecast.adapter.ViewpagerAdapter;
 import framgia.vn.weatherforecast.ui.fragment.WeatherCityFragment;
 
 public class MainActivity extends AppCompatActivity {
+    private static ViewpagerAdapter mViewpagerAdapter;
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.drawer_layout)
@@ -28,11 +30,17 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout mLinearLayoutSettings;
     @Bind(R.id.view_pager)
     ViewPager mViewPager;
+    @Bind(R.id.text_city)
+    TextView mTvCity;
     private ActionBarDrawerToggle mToggle;
-    private static ViewpagerAdapter mViewpagerAdapter;
     private double lat = 15.735394;
     private double lon = 96.7372145;
-    private String city = "America/Los_Angeles";
+    private String city = "Middle of Nowhere";
+
+    // TODO: 23/06/2016 add fragment when click button toolbar
+    public static void addFragment(String city, double latitude, double longitude) {
+        mViewpagerAdapter.addFragment(WeatherCityFragment.newIntance(city, latitude, longitude));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +58,16 @@ public class MainActivity extends AppCompatActivity {
             R.string.navigation_drawer_close);
         mDrawerLayout.setDrawerListener(mToggle);
         mToggle.syncState();
+        mViewPager.setOffscreenPageLimit(1);
         setupViewPager(mViewPager, city, lat, lon);
+    }
+
+    public void changeToobar(String city) {
+        mTvCity.setText(city);
+    }
+
+    public void changeBackgroudDrawer(int uri) {
+        mDrawerLayout.setBackgroundResource(uri);
     }
 
     @OnClick(R.id.linear_layout_settings)
@@ -82,10 +99,6 @@ public class MainActivity extends AppCompatActivity {
         mViewpagerAdapter.remove(position);
     }
 
-    // TODO: 23/06/2016 add fragment when click button toolbar
-    public static void  addFragment(String city, double latitude, double longitude) {
-        mViewpagerAdapter.addFragment(WeatherCityFragment.newIntance(city, latitude, longitude));
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);

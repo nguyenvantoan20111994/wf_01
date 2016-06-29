@@ -2,6 +2,10 @@ package framgia.vn.weatherforecast.data.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * Created by toannguyen201194 on 20/06/2016.
  */
@@ -55,5 +59,11 @@ public class WeatherForeCast {
 
     public void setmTimeZone(String timeZone) {
         this.mTimeZone = timeZone;
+    }
+    public String getFormattedTime() {
+        SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
+        formatter.setTimeZone(TimeZone.getTimeZone(getTimeZone()));
+        Date dateTime = new Date(mCurrently.getTime() * 1000);
+        return formatter.format(dateTime);
     }
 }

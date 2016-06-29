@@ -13,8 +13,10 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import framgia.vn.weatherforecast.AppConfigs;
 import framgia.vn.weatherforecast.R;
 import framgia.vn.weatherforecast.data.model.Data;
+import framgia.vn.weatherforecast.util.ResourcesUtils;
 
 /**
  * Created by toannguyen201194 on 22/06/2016.
@@ -41,9 +43,8 @@ public class DayForecastAdapters
     public void onBindViewHolder(DayOfWeekHolders holder, int position) {
         Data daily = mDailies.get(position);
         holder.text_day.setText(daily.getDayOfTheWeek());
-        int id=mContext.getResources().getIdentifier(daily.getIcon(),"drawable",mContext
-            .getPackageName());
-        holder.image_icon.setImageResource(id);
+        holder.image_icon.setImageResource(ResourcesUtils.getResources(mContext,daily.getIcon(),
+            AppConfigs.DRAWABLE));
         holder.text_temperatureminmax
             .setText(daily.getTemperatureMin() + "/" + daily.getTemperatureMax());
     }
