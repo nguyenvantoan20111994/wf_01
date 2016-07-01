@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import framgia.vn.weatherforecast.AppConfigs;
+
 /**
  * Created by toannguyen201194 on 24/06/2016.
  */
@@ -41,7 +43,7 @@ public class Currently {
     }
 
     public String getIcon() {
-        return mIcon.replace("-","_");
+        return mIcon.replace("-", "_");
     }
 
     public void setIcon(String icon) {
@@ -84,5 +86,12 @@ public class Currently {
         SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
         Date dateTime = new Date(getTime() * 1000);
         return formatter.format(dateTime);
+    }
+
+    public String getTimeUpdate() {
+        SimpleDateFormat formatter = new SimpleDateFormat("h:mm:ss");
+        long timeCurrentupdate = (System.currentTimeMillis() - mTime * 1000);
+        Date date = new Date(timeCurrentupdate);
+        return AppConfigs.UPDATE + formatter.format(date);
     }
 }

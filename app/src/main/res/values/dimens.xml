@@ -19,5 +19,6 @@
     <dimen name="recycler_item_height">70dp</dimen>
     <dimen name="text_day_padding">10dp</dimen>
     <dimen name="layout_height">0dp</dimen>
+    <dimen name="recycleview_height">40dp</dimen>
     <dimen name="clear_text_search_dimen">26dp</dimen>
 </resources>

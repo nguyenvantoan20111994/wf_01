@@ -33,7 +33,10 @@
     <string name="prompt_connection_suspended">Connection Suspended</string>
     <string name="prompt_connection_failed">Connection Failed</string>
     <string name="forecast_io">Forecast.io</string>
-
+    <string name="not_Found_Loction">not found Location in forecast.io </string>
+    <string name="not_connect_network">Please! choose a connection network</string>
+    <string name="data_request">no data returns please swipe the screen to the latest</string>
+    <string name="update">Update:</string>
     <array name="temperature_unit">
         <item name="celsius">Celsius</item>
         <item name="fahrenheilt">Fahrenheit</item>
