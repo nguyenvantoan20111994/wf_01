@@ -1,12 +1,13 @@
 package framgia.vn.weatherforecast.ui.activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +32,14 @@ import framgia.vn.weatherforecast.R;
 import framgia.vn.weatherforecast.adapter.ViewpagerAdapter;
 import framgia.vn.weatherforecast.data.model.WeatherForeCast;
 import framgia.vn.weatherforecast.data.service.WeatherRepository;
+import framgia.vn.weatherforecast.service.GPSTrackerService;
+import framgia.vn.weatherforecast.util.CheckConnectionUtil;
+import framgia.vn.weatherforecast.util.DialogUtils;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
+    public static ViewpagerAdapter mViewpagerAdapter;
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.drawer_layout)
@@ -44,11 +50,13 @@ public class MainActivity extends AppCompatActivity {
     ViewPager mViewPager;
     @Bind(R.id.text_city)
     TextView mTvCity;
+    @Bind(android.R.id.content)
+    View mView;
+    private GPSTrackerService mGpsTrackerService;
     private ActionBarDrawerToggle mToggle;
     private LocationManager mLocationManager;
-    private static ViewpagerAdapter mViewpagerAdapter;
     private Realm mRealm;
-    private List<WeatherForeCast> mWeatherForeCasts;
+    private List<WeatherForeCast> mWeatherForeCasts = new ArrayList<>();
     private WeatherRepository mWeatherRepository;
 
     @Override
@@ -57,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initViews();
+        requestPermissions();
         loadData();
     }
 
@@ -64,16 +73,15 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(null);
         mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        checkLocationServiceEnabled();
         mRealm = Realm.getDefaultInstance();
         mWeatherRepository = new WeatherRepository(mRealm);
-        mWeatherForeCasts = new ArrayList<>();
         mToggle = new ActionBarDrawerToggle(
             this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open,
             R.string.navigation_drawer_close);
         mDrawerLayout.setDrawerListener(mToggle);
         mToggle.syncState();
         mViewpagerAdapter = new ViewpagerAdapter(getSupportFragmentManager(), mWeatherForeCasts);
+        mViewPager.setOffscreenPageLimit(10);
         mViewPager.setAdapter(mViewpagerAdapter);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -89,10 +97,17 @@ public class MainActivity extends AppCompatActivity {
     private void loadData() {
         RealmResults<WeatherForeCast> data = mWeatherRepository.getAllWeatherForecast();
         if (data.size() == 0) {
-            WeatherForeCast weatherForeCast = new WeatherForeCast(AppConfigs.DEFAULT_CITY_NAME,
-                AppConfigs.DEFAULT_LATITUDE, AppConfigs.DEFAULT_LONGITUDE);
-            mWeatherForeCasts.add(weatherForeCast);
-            mViewpagerAdapter.notifyDataSetChanged();
+            if (CheckConnectionUtil.isInternetOn(this)) {
+                WeatherForeCast weatherForeCast = new WeatherForeCast(AppConfigs.DEFAULT_CITY_NAME,
+                    AppConfigs.DEFAULT_LATITUDE, AppConfigs.DEFAULT_LONGITUDE);
+                mWeatherForeCasts.add(weatherForeCast);
+                mViewpagerAdapter.notifyDataSetChanged();
+            } else {
+                mDrawerLayout.setBackgroundResource(R.drawable.background_clear_day);
+                Toast.makeText(MainActivity.this, getString(R.string.not_connect_network),
+                    Toast.LENGTH_SHORT)
+                    .show();
+            }
         } else {
             mWeatherForeCasts.addAll(data);
             mViewpagerAdapter.notifyDataSetChanged();
@@ -101,28 +116,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeTitle(String city) {
         mTvCity.setText(city);
-    }
-
-    private void checkLocationServiceEnabled() {
-        boolean gpsEnabled = false;
-        boolean networkEnabled = false;
-        gpsEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        networkEnabled = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        if (!gpsEnabled && !networkEnabled) {
-            final Snackbar snackbar = Snackbar
-                .make(this.findViewById(android.R.id.content), R.string.location_services_disabled,
-                    Snackbar.LENGTH_LONG);
-            snackbar.setActionTextColor(Color.GREEN);
-            snackbar.setAction(R.string.action_enable_current_location, new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    snackbar.dismiss();
-                    Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    MainActivity.this.startActivity(myIntent);
-                }
-            });
-            snackbar.show();
-        }
     }
 
     public void changeBackgroudDrawer(int uri) {
@@ -163,18 +156,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        checkLocationServiceEnabled();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        checkLocationServiceEnabled();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         mRealm.close();
@@ -183,5 +164,30 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void requestPermissions() {
+        if (DialogUtils.checkPermission(this)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)) {
+                DialogUtils.showSnackbar(this, mView, R.string.permissions, R.string.allow);
+            } else {
+                DialogUtils.PermissionRequest(this);
+            }
+        } else {
+            DialogUtils.getlocation(this, mGpsTrackerService, mWeatherForeCasts, mViewpagerAdapter);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == AppConfigs.MY_PERMISSIONS_REQUEST) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                DialogUtils
+                    .getlocation(this, mGpsTrackerService, mWeatherForeCasts, mViewpagerAdapter);
+            }
+        }
     }
 }

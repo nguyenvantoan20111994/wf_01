@@ -1,8 +1,12 @@
 package framgia.vn.weatherforecast.ui.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -24,6 +29,9 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -32,6 +40,9 @@ import framgia.vn.weatherforecast.AppConfigs;
 import framgia.vn.weatherforecast.R;
 import framgia.vn.weatherforecast.adapter.OnItemClickListener;
 import framgia.vn.weatherforecast.adapter.PlacesAutoCompleteAdapter;
+import framgia.vn.weatherforecast.data.model.WeatherForeCast;
+import framgia.vn.weatherforecast.service.GPSTrackerService;
+import framgia.vn.weatherforecast.util.DialogUtils;
 
 /**
  * Created by framgia on 23/06/2016.
@@ -48,9 +59,15 @@ public class AddCityActivity extends AppCompatActivity
     Button mButtonClearTextSearch;
     @Bind(R.id.recycler_view_cities)
     RecyclerView mRecyclerViewCities;
+    @Bind(android.R.id.content)
+    View mView;
+    @Bind(R.id.linear_layout_use_current_location)
+    LinearLayout mLinearCurrentLocation;
+    private GPSTrackerService mGpsTrackerService;
     private GoogleApiClient mGoogleApiClient;
     private LinearLayoutManager mLinearLayoutManager;
     private PlacesAutoCompleteAdapter mAutoCompleteAdapter;
+    private List<WeatherForeCast> mWeatherForeCasts = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,6 +129,7 @@ public class AddCityActivity extends AppCompatActivity
     void searchCIty(CharSequence s, int start, int before, int count) {
         if (!s.toString().equals("")) {
             mButtonClearTextSearch.setVisibility(View.VISIBLE);
+            mLinearCurrentLocation.setVisibility(View.GONE);
             if (mGoogleApiClient.isConnected()) {
                 mAutoCompleteAdapter.getFilter().filter(s.toString());
             } else {
@@ -120,12 +138,18 @@ public class AddCityActivity extends AppCompatActivity
             }
         } else {
             mButtonClearTextSearch.setVisibility(View.GONE);
+            mLinearCurrentLocation.setVisibility(View.VISIBLE);
         }
     }
 
     @OnClick(R.id.button_clear_text_search)
     void clearTextSearch() {
         mEditTextSearchCity.setText("");
+    }
+
+    @OnClick(R.id.linear_layout_use_current_location)
+    void useCurrentLocation() {
+        requestPermissions();
     }
 
     @Override
@@ -182,6 +206,33 @@ public class AddCityActivity extends AppCompatActivity
         super.onPause();
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
+        }
+    }
+
+    public void requestPermissions() {
+        if (DialogUtils.checkPermission(this)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)) {
+                DialogUtils.showSnackbar(this, mView, R.string.permissions, R.string.settings);
+            } else {
+                DialogUtils.PermissionRequest(this);
+            }
+        } else {
+            DialogUtils.getlocation(this, mGpsTrackerService, mWeatherForeCasts,
+                MainActivity.mViewpagerAdapter);
+            finish();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == AppConfigs.MY_PERMISSIONS_REQUEST) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                DialogUtils.getlocation(this, mGpsTrackerService, mWeatherForeCasts,
+                    MainActivity.mViewpagerAdapter);
+            }
         }
     }
 }

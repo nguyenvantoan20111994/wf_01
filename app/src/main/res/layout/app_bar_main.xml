@@ -23,6 +23,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center"
+                android:textSize="@dimen/text_size_city"
                 android:textColor="@android:color/white" />
         </android.support.v7.widget.Toolbar>
 

@@ -30,4 +30,10 @@ public class ViewpagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return mDatas.size();
     }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return  POSITION_NONE;
+    }
+
 }

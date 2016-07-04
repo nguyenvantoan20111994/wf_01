@@ -1,14 +1,13 @@
 package framgia.vn.weatherforecast.ui.fragment;
 
-import android.location.Address;
-import android.location.Geocoder;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,8 +30,8 @@ import framgia.vn.weatherforecast.service.BuilderService;
 import framgia.vn.weatherforecast.ui.activities.MainActivity;
 import framgia.vn.weatherforecast.util.CheckConnectionUtil;
 import framgia.vn.weatherforecast.util.ResourcesUtils;
+import framgia.vn.weatherforecast.util.WeatherUtils;
 import io.realm.Realm;
-import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -69,11 +66,17 @@ public class WeatherCityFragment extends Fragment implements Callback<WeatherFor
     private String mCity;
     private double mLatitude;
     private double mLongitude;
+    private Boolean isStarted = false;
+    private Boolean isVisible = false;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<Data> mDailyList = new ArrayList<>();
     private Realm mRealm;
     private WeatherForeCast mWeatherForeCast;
     private WeatherRepository mWeatherRepository;
+    private SharedPreferences mSettings;
+
+    public WeatherCityFragment() {
+    }
 
     public WeatherCityFragment(WeatherForeCast mWeatherForeCast) {
         this.mWeatherForeCast = mWeatherForeCast;
@@ -87,6 +90,8 @@ public class WeatherCityFragment extends Fragment implements Callback<WeatherFor
         super.onCreate(savedInstanceState);
         mRealm = Realm.getDefaultInstance();
         mWeatherRepository = new WeatherRepository(mRealm);
+        mSettings = this.getActivity().getSharedPreferences(AppConfigs.WEATHER_SETTINGS, Context
+            .MODE_PRIVATE);
     }
 
     @Override
@@ -104,6 +109,7 @@ public class WeatherCityFragment extends Fragment implements Callback<WeatherFor
         mDayForecastAdapters =
             new DayForecastAdapters(mDailyList, getActivity());
         mRecyclerView.setAdapter(mDayForecastAdapters);
+        loadDataWeather();
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -154,43 +160,51 @@ public class WeatherCityFragment extends Fragment implements Callback<WeatherFor
         });
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        loadDataWeather();
-    }
-
     public void getDataView(WeatherForeCast weatherForeCast) {
         mWeatherForeCast = weatherForeCast;
         mRealm.beginTransaction();
         mWeatherForeCast.setCity(mCity);
         mRealm.commitTransaction();
         mWeatherRepository.insertWeatherForecast(mWeatherForeCast);
-        ((MainActivity) getActivity()).changeTitle(mWeatherForeCast.getCity());
         mTvhours.setText(mWeatherForeCast.getFormattedTime());
-        mTvTemperature.setText(
-            String.valueOf(mWeatherForeCast.getCurrently().getTemperature()) + (char) 0x00B0);
+        mTvTemperature.setText(WeatherUtils.getCurrentTemperatue(mSettings, mWeatherForeCast
+            .getCurrently().getTemperature()));
         mImIconLarge.setImageResource(ResourcesUtils.getResources(getContext(), String.valueOf
             (mWeatherForeCast.getCurrently().getIcon()), AppConfigs.DRAWABLE));
         mTvShortSumary.setText(String.valueOf(mWeatherForeCast.getCurrently().getSummary()));
-        mTvHumidity.setText(String.valueOf(mWeatherForeCast.getCurrently().getHumidity()));
+        mTvHumidity.setText(
+            String.format("%.0f %c", mWeatherForeCast.getCurrently().getHumidity(), '%'));
         mTvDewPoint.setText(String.valueOf(mWeatherForeCast.getCurrently().getDewPoint()));
-        mTvWindSpeed.setText(String.valueOf(mWeatherForeCast.getCurrently().getWindSpeed()));
+        mTvWindSpeed.setText(WeatherUtils.getWinSpeed(mSettings, mWeatherForeCast.getCurrently()
+            .getWindSpeed()));
         mDailyList.clear();
         for (int i = 1; i < mWeatherForeCast.getDaily().getData().size(); i++) {
             mDailyList.add(mWeatherForeCast.getDaily().getData().get(i));
         }
         mTvLongSummary.setText(String.valueOf(mWeatherForeCast.getDaily().getSummary()));
-        mTvUpdateTime.setText(mWeatherForeCast.getCurrently().getTimeUpdate());
         mDayForecastAdapters.notifyDataSetChanged();
-        if (mWeatherForeCast.getCurrently().getIcon().equals("clear_night")) {
-            ((MainActivity) getActivity())
-                .changeBackgroudDrawer(R.drawable.backgroud_clear_night);
-        } else if (mWeatherForeCast.getCurrently().getIcon().equals("rain")) {
-            ((MainActivity) getActivity()).changeBackgroudDrawer(R.drawable.backgroud_rain);
-        } else {
-            ((MainActivity) getActivity())
-                .changeBackgroudDrawer(R.drawable.background_clear_day);
+        ((MainActivity) getActivity()).changeTitle(mWeatherForeCast.getCity());
+        String icon = mWeatherForeCast.getCurrently().getIcon();
+        WeatherUtils.setBackgroudActivity(icon, getActivity());
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        isVisible = isVisibleToUser;
+        if (isStarted && isVisible) {
+            String icon = mWeatherForeCast.getCurrently().getIcon();
+            WeatherUtils.setBackgroudActivity(icon, getActivity());
+            ((MainActivity) getActivity()).changeTitle(mWeatherForeCast.getCity());
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        isStarted = true;
+        if (isStarted){
+            ((MainActivity) getActivity()).changeTitle(mWeatherForeCast.getCity());
         }
     }
 }

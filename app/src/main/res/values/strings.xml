@@ -41,20 +41,28 @@
     <string name="action_enable_current_location">Enable</string>
     <string name="location_services_disabled">Location services disabled</string>
     <string name="open_location_settings">Open location settings</string>
-    <string name="permissions">You need to grant permission</string>
-    <string name="retry">Retry</string>
     <string name="current_location_not_found">Current location not found</string>
     <string name="require_location_permission">You need to allow location permission</string>
     <string name="city">city</string>
+    <string name="permissions">Location permission denied</string>
+    <string name="retry">Retry</string>
+    <string name="Settings">Setting</string>
+    <string name="no_allow_find">please allow</string>
+    <string name="use_current_location">Use current loction</string>
+    <string name="title_gps_setting">GPS is settings</string>
+    <string name="gps_notification">GPS is not enabled. Do you want to go to settings menu?</string>
+    <string name="gps_setting">Settings</string>
+    <string name="gps_cancel">Cancel</string>
+    <string name="allow">allow</string>
     <array name="temperature_unit">
-        <item name="celsius">Celsius</item>
         <item name="fahrenheilt">Fahrenheit</item>
+        <item name="celsius">Celsius</item>
     </array>
 
     <array name="wind_speed_unit">
-        <item name="ms">m/s</item>
         <item name="mph">mph</item>
+        <item name="ms">m/s</item>
         <item name="kmh">km/h</item>
     </array>
-    
+
 </resources>

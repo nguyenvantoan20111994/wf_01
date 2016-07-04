@@ -1,7 +1,7 @@
 package framgia.vn.weatherforecast.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +17,7 @@ import framgia.vn.weatherforecast.AppConfigs;
 import framgia.vn.weatherforecast.R;
 import framgia.vn.weatherforecast.data.model.Data;
 import framgia.vn.weatherforecast.util.ResourcesUtils;
+import framgia.vn.weatherforecast.util.WeatherUtils;
 
 /**
  * Created by toannguyen201194 on 22/06/2016.
@@ -26,11 +27,14 @@ public class DayForecastAdapters
     List<Data> mDailies;
     Context mContext;
     LayoutInflater mLayoutInflater;
+    private SharedPreferences mSettings;
 
     public DayForecastAdapters(List<Data> dailies, Context context) {
         mDailies = dailies;
         mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
+        mSettings = mContext.getSharedPreferences(AppConfigs.WEATHER_SETTINGS, Context
+            .MODE_PRIVATE);
     }
 
     @Override
@@ -45,8 +49,8 @@ public class DayForecastAdapters
         holder.text_day.setText(daily.getDayOfTheWeek());
         holder.image_icon.setImageResource(ResourcesUtils.getResources(mContext, daily.getIcon(),
             AppConfigs.DRAWABLE));
-        holder.text_temperatureminmax
-            .setText(daily.getTemperatureMin() + "/" + daily.getTemperatureMax());
+        holder.text_temperatureminmax.setText(WeatherUtils.getDailyTemperatue(mSettings,daily
+            .getTemperatureMin(),daily.getTemperatureMax()));
     }
 
     @Override

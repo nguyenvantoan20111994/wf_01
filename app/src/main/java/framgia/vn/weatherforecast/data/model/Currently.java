@@ -23,7 +23,7 @@ public class Currently extends RealmObject {
     @SerializedName("humidity")
     private float mHumidity;
     @SerializedName("windSpeed")
-    private float mWindSpeed;
+    private double mWindSpeed;
     @SerializedName("dewPoint")
     private float mDewPoint;
 
@@ -59,11 +59,11 @@ public class Currently extends RealmObject {
         this.mHumidity = humidity;
     }
 
-    public float getWindSpeed() {
+    public double getWindSpeed() {
         return mWindSpeed;
     }
 
-    public void setWindSpeed(float windSpeed) {
+    public void setWindSpeed(double windSpeed) {
         this.mWindSpeed = windSpeed;
     }
 
