@@ -4,14 +4,17 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import io.realm.RealmList;
+import io.realm.RealmObject;
+
 /**
  * Created by toannguyen201194 on 20/06/2016.
  */
-public class Daily {
+public class Daily extends RealmObject{
     @SerializedName("summary")
     private String mSummary;
     @SerializedName("data")
-    private List<Data> mData;
+    private RealmList<Data> mData;
     public String getSummary() {
         return mSummary;
     }
@@ -24,7 +27,7 @@ public class Daily {
         return mData;
     }
 
-    public void setData(List<Data> data) {
+    public void setData(RealmList<Data> data) {
         this.mData = data;
     }
 }

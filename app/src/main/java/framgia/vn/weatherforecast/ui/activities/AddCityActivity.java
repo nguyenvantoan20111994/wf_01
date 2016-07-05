@@ -1,5 +1,6 @@
 package framgia.vn.weatherforecast.ui.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import framgia.vn.weatherforecast.AppConfigs;
 import framgia.vn.weatherforecast.R;
 import framgia.vn.weatherforecast.adapter.OnItemClickListener;
 import framgia.vn.weatherforecast.adapter.PlacesAutoCompleteAdapter;
@@ -84,8 +86,15 @@ public class AddCityActivity extends AppCompatActivity
                             if (places.getCount() == 1) {
                                 Place selectedPlace = places.get(0);
                                 LatLng latLng = selectedPlace.getLatLng();
-                                MainActivity.addFragment(selectedPlace.getName().toString(),
-                                    latLng.latitude, latLng.longitude);
+                                Bundle bundle = new Bundle();
+                                bundle.putString(AppConfigs.CITY_BUND,
+                                    selectedPlace.getName().toString());
+                                bundle.putDouble(AppConfigs.LATITUDE, latLng.latitude);
+                                bundle.putDouble(AppConfigs.LONGITUDE, latLng.longitude);
+                                Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                                intent.putExtras(bundle);
+                                startActivityForResult(intent,
+                                    AppConfigs.REQUEST_LATLONG_SUCCESSFULLY);
                                 finish();
                             } else {
                                 Toast.makeText(getApplicationContext(),

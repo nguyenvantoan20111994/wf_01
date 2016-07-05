@@ -6,14 +6,19 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by toannguyen201194 on 20/06/2016.
  */
-public class WeatherForeCast {
+public class WeatherForeCast extends RealmObject {
+    @PrimaryKey
+    private String mCity;
     @SerializedName("latitude")
-    private float mLatitude;
+    private double mLatitude;
     @SerializedName("longitude")
-    private float mLongitude;
+    private double mLongitude;
     @SerializedName("timezone")
     private String mTimeZone;
     @SerializedName("currently")
@@ -21,7 +26,24 @@ public class WeatherForeCast {
     @SerializedName("daily")
     private Daily mDaily;
 
-    public float getLatitude() {
+    public WeatherForeCast(String mCity, double mLatitude, double mLongitude) {
+        this.mCity = mCity;
+        this.mLatitude = mLatitude;
+        this.mLongitude = mLongitude;
+    }
+
+    public WeatherForeCast() {
+    }
+
+    public String getCity() {
+        return mCity;
+    }
+
+    public void setCity(String city) {
+        this.mCity = city;
+    }
+
+    public double getLatitude() {
         return mLatitude;
     }
 
@@ -29,7 +51,7 @@ public class WeatherForeCast {
         this.mLatitude = latitude;
     }
 
-    public float getLongitude() {
+    public double getLongitude() {
         return mLongitude;
     }
 
@@ -57,9 +79,10 @@ public class WeatherForeCast {
         return mTimeZone;
     }
 
-    public void setmTimeZone(String timeZone) {
+    public void setTimeZone(String timeZone) {
         this.mTimeZone = timeZone;
     }
+
     public String getFormattedTime() {
         SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
         formatter.setTimeZone(TimeZone.getTimeZone(getTimeZone()));
